@@ -15,7 +15,7 @@ export default function signup(props) {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    username: "",
+    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -71,7 +71,7 @@ export default function signup(props) {
             " Try with different username or login with existing username :(",
         });
       } else {
-        setShow(!show); // show the login form
+        //setShow(!show); // show the login form
         setData({
           title: "Sign Up Successful :)",
           message: "Now login with your credentials",
@@ -84,7 +84,7 @@ export default function signup(props) {
       let msgBody = "";
       let msgTitle = "";
 
-      if (!err?.response) {
+      if (!err?.response?.status === 500) {
         console.log("response: " + response); //DEBUG POINT
 
         msgTitle = "Internal Server Error!!!";
@@ -129,7 +129,7 @@ export default function signup(props) {
     setUser({
       firstName: "",
       lastName: "",
-      username: "",
+      email: "",
       password: "",
       confirmPassword: "",
     }); // reset the signup form
@@ -147,10 +147,11 @@ export default function signup(props) {
     if (!result.success) {
       let errmsg = "";
       result.error.issues.forEach((issue) => {
-        errmsg = errmsg + issue.path[0] + ":" + issue.message + "\n";
+        errmsg = issue.path[0] + " : " + issue.message + "\n";
+        toast.error(errmsg);
       });
 
-      toast.error(errmsg);
+      //toast.error(errmsg);
     } else {
       setUser(result.data);
       saveUser();
@@ -202,8 +203,8 @@ export default function signup(props) {
             </span>
             <input
               id="mail"
-              name="username"
-              value={user.username}
+              name="email"
+              value={user.email}
               onChange={(e) => handleChange(e)}
               placeholder=""
               required
