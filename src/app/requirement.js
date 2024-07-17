@@ -8,7 +8,7 @@ export const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-// Schema for validating password
+// Schema for validating signup form data
 export const regFormSchema = z
   .object({
     firstName: z
@@ -35,3 +35,9 @@ export const regFormSchema = z
       });
     }
   });
+
+// Schema for validating signup form data
+export const loginFormSchema = z.object({
+  username: z.string().trim().email({ message: "invalid data" }),
+  password: z.string().min(8),
+});
