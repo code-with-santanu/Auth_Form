@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "poppins", "sans-serif";
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  list-style: none;
+  text-decoration: none;
+}
+
+:root {
+  --black-shade: linear-gradient(to top, #222f3b, #000000);
+}
+
+/* -------------------LOGIN FORM-------------------- */
+
+.outer-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--black-shade);
+}
+
+.logIn-box,
+.signUp-box {
+  position: relative;
+  width: 25rem;
+  min-height: 550px;
+  background: transparent;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(20px);
+}
+
+.input-box {
+  position: relative;
+  width: 310px;
+  margin: 20px 0 20px 0;
+  border-bottom: 2px solid #fff;
+}
+
+.input-box label {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+  top: 5px;
+  font-size: 0.7rem;
+}
+
+.input-box input {
+  width: 100%;
+  height: 55px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: 500;
+  padding: 0 35px 0 5px;
+}
+
+.input-box .icon {
+  position: absolute;
+  right: 8px;
+  color: #fff;
+  font-size: 1.2rem;
+  /* line-height: 57px; */
+  top: 15px;
+}
+
+.remember-forgot {
+  margin: -15px 0 15px;
+  font-size: 0.9rem;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.loginButton {
+  width: 100%;
+  height: 40px;
+  background: rgba(255, 255, 255, 1);
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #000;
+  font-weight: 700;
+  transition: all 0.2 ease;
+}
+
+.loginButton:active {
+  background: rgba(174, 171, 171, 0.8);
+}
+
+.togglePage-link {
+  font-size: 0.9em;
+  color: #fff;
+  text-align: center;
+  margin: 25px 0 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .logIn-box {
+    /* width: 100%; */
+    margin-left: 5%;
+    margin-right: 5%;
+    /* height: 100vh; */
+    border: none;
+    border-radius: 0;
+  }
+
+  .input-box {
+    width: 290px;
+  }
+}
