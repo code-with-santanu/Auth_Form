@@ -19,7 +19,7 @@ export default function login(props) {
 
   // For Login Form
   const [authUser, setAuthUser] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -111,7 +111,7 @@ export default function login(props) {
     // reset the login form
     setAuthUser({
       ...authUser,
-      email: "",
+      username: "",
       password: "",
     });
   };
@@ -150,14 +150,14 @@ export default function login(props) {
               <ion-icon name="mail"></ion-icon>
             </span>
             <input
-              name="email"
-              id="email"
+              name="username"
+              id="username"
               type="email"
               required
-              value={authUser.email}
+              value={authUser.username}
               onChange={(e) => handleLoginChange(e)}
             />
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Email</label>
           </div>
           <div className="input-box">
             <span className="icon ">

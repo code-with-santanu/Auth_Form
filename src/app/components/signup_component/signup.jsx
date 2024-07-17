@@ -15,7 +15,7 @@ export default function signup(props) {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -68,7 +68,7 @@ export default function signup(props) {
           title: "Username Already Exists!!!",
           message:
             response?.status +
-            " Try with different email or login with existing email :(",
+            " Try with different username or login with existing username :(",
         });
       } else {
         setShow(!show); // show the login form
@@ -98,7 +98,8 @@ export default function signup(props) {
         console.log("response: " + err.response); // DEBUG POINT
 
         msgTitle = "Username Already Exists!!!";
-        msgBody = " Try with different email or login with existing email :(";
+        msgBody =
+          " Try with different username or login with existing username :(";
       } else if (err.response?.status === 401) {
         console.log("response: " + err.response); // DEBUG POINT
 
@@ -128,7 +129,7 @@ export default function signup(props) {
     setUser({
       firstName: "",
       lastName: "",
-      email: "",
+      username: "",
       password: "",
       confirmPassword: "",
     }); // reset the signup form
@@ -201,8 +202,8 @@ export default function signup(props) {
             </span>
             <input
               id="mail"
-              name="email"
-              value={user.email}
+              name="username"
+              value={user.username}
               onChange={(e) => handleChange(e)}
               placeholder=""
               required
