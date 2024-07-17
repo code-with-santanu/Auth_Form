@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import { regFormSchema } from "../../requirement";
+import { loginFormSchema } from "../../requirement";
 import AuthSocialButton from "./AuthSocialButton";
 import DialogBox from "../DialogBox";
 import axios from "../../api/axios";
@@ -40,28 +40,27 @@ export default function login(props) {
   const clientAction = (e) => {
     e.preventDefault();
 
-    const getData = { ...user };
+    const getData = { ...authUser };
 
     // client side validation
-    const result = regFormSchema.safeParse(getData);
+    const result = loginFormSchema.safeParse(getData);
 
     if (!result.success) {
       let errmsg = "";
       result.error.issues.forEach((issue) => {
-        errmsg = errmsg + issue.path[0] + ":" + issue.message + "\n";
+        errmsg = issue.path[0] + ":" + issue.message + "\n";
+        toast.error(errmsg);
       });
-
-      toast.error(errmsg);
     } else {
-      setUser(result.data);
-      saveUser();
+      setAuthUser(result.data);
+      loginUser();
     }
   };
 
   const LOGIN_URL = "/auth/login";
   // Function to login user
-  const loginUser = async (e) => {
-    e.preventDefault();
+  const loginUser = async () => {
+    // e.preventDefault();
 
     let response = null;
     try {
@@ -71,7 +70,7 @@ export default function login(props) {
       });
       const accessToken = JSON.stringify(response?.data?.token);
       console.log(response?.data);
-      setAuth({ accessToken });
+      setAuth({ accessToken }); // Token is saved in the context
 
       console.log("LOGIN SUCCESSFUL"); //DEBUG POINT
     } catch (err) {
@@ -139,7 +138,7 @@ export default function login(props) {
       ></script>
 
       <div className="logIn-box">
-        <form onSubmit={loginUser}>
+        <form onSubmit={clientAction}>
           <div className="heading  sm:mx-auto sm:w-full sm:mx-w-md">
             <h1 className="text-3xl font-bold text-center text-white">
               Sign In
