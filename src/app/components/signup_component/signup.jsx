@@ -4,8 +4,9 @@ import React, { useState } from "react";
 
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import { regFormSchema } from "../../requirement";
+import { regFormSchema } from "../../helper/requirement";
 import DialogBox from "../DialogBox";
+import { registerUser } from "@/app/severAction";
 
 export default function signup(props) {
   // To show or hide password
@@ -44,104 +45,13 @@ export default function signup(props) {
     setShowPassword(!showPassword);
   };
 
-  // function to trigger to register a user
-  const saveUser = async () => {
-    let response = null;
-    try {
-      delete user.confirmPassword; // deleted entry before sending the data to backend
-      response = await fetch("http://localhost:8080/auth/register", {
-        method: "POST",
-        // redirect: follow, // allow redirection for authentication
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...user,
-        }),
-        credentials: "include",
-      });
-
-      console.log(response); // DEBUG POINT
-      if (response?.status === 400) {
-        setData({
-          title: "Username Already Exists!!!",
-          message:
-            response?.status +
-            " Try with different username or login with existing username :(",
-        });
-      } else {
-        //setShow(!show); // show the login form
-        setData({
-          title: "Sign Up Successful :)",
-          message: "Now login with your credentials",
-        });
-      }
-      setOpen(true); // show the dialogbox
-    } catch (err) {
-      console.log(err);
-
-      let msgBody = "";
-      let msgTitle = "";
-
-      if (!err?.response?.status === 500) {
-        console.log("response: " + response); //DEBUG POINT
-
-        msgTitle = "Internal Server Error!!!";
-        msgBody = "  Couldn't fetch the requested url :(";
-      } else if (err.response?.status === 403) {
-        console.log("response: " + err.response); // DEBUG POINT
-
-        msgTitle = "Unauthorized access or Internal Server Error!!!";
-        msgBody = "  Forbidden! The Server is refusing to respond to it :(";
-      } else if (err.response?.status === 400) {
-        console.log("response: " + err.response); // DEBUG POINT
-
-        msgTitle = "Username Already Exists!!!";
-        msgBody =
-          " Try with different username or login with existing username :(";
-      } else if (err.response?.status === 401) {
-        console.log("response: " + err.response); // DEBUG POINT
-
-        msgTitle = "Unauthorized access or Internal Server Error!!!";
-        msgBody = " Invalid credentials :(";
-      } else {
-        console.log("response: " + err.response); // DEBUG POINT
-
-        msgTitle = "Unauthorized access or Internal Server Error!!!";
-        msgBody = " Check your internet connection or Bad request :(";
-      }
-
-      setData({
-        title: msgTitle,
-        message: err.response?.status + msgBody,
-      });
-      setOpen(true); // show the dialogbox
-    }
-
-    try {
-      const _user = await response?.json();
-      console.log(_user);
-    } catch {
-      console.log("Couldn't parse to json data");
-    }
-
-    setUser({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    }); // reset the signup form
-  };
-
-  // function to handle exception for invallid input data
-  const clientAction = (e) => {
+  // function to trigger while form is submitted for register
+  const clientAction = async (e) => {
     e.preventDefault();
 
     const getData = { ...user };
 
-    // client side validation
+    // client side data validation
     const result = regFormSchema.safeParse(getData);
 
     if (!result.success) {
@@ -154,7 +64,31 @@ export default function signup(props) {
       //toast.error(errmsg);
     } else {
       setUser(result.data);
-      saveUser();
+      const response = await registerUser(user);
+      console.log("received: " + response);
+
+      if (response?.status === 200) {
+        // toggle to login page
+        props.onClick(true);
+        console.log("SIGNUP SUCCESSFUL"); //DEBUG POINT
+        toast.success("Now Login with your credentials");
+      } else {
+        console.log("ERROR ENCOUNTERED");
+        setData({
+          title: response.title,
+          message: response.msgBody,
+        });
+        setOpen(true); // show the dialogbox
+      }
+
+      // reset the signup form
+      setUser({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     }
   };
 
@@ -213,7 +147,7 @@ export default function signup(props) {
             <label htmlFor="mail">Email</label>
           </div>
           <div className="input-box">
-            <span className="icon">
+            <span className="icon cursor-pointer">
               {showPassword ? (
                 <FaRegEye onClick={handlePassword} />
               ) : (
@@ -231,7 +165,7 @@ export default function signup(props) {
             <label htmlFor="passwd">Password</label>
           </div>
           <div className="input-box">
-            <span className="icon">
+            <span className="icon cursor-pointer">
               {showPassword ? (
                 <FaRegEye onClick={handlePassword} />
               ) : (

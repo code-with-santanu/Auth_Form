@@ -4,13 +4,15 @@ import Link from "next/link";
 
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import { loginFormSchema } from "../../requirement";
+import { loginFormSchema } from "../../helper/requirement";
 import AuthSocialButton from "./AuthSocialButton";
 import DialogBox from "../DialogBox";
-import axios from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
+import { useRouter } from "next/navigation";
+import { loginUser } from "@/app/severAction";
 
 export default function login(props) {
+  const router = useRouter();
   // Global context
   const { setAuth } = useContext(AuthContext);
 
@@ -27,8 +29,8 @@ export default function login(props) {
   const [open, setOpen] = React.useState(false);
   // Display messege for dialog box
   const [data, setData] = useState({
-    title: "Congratilation! You're successfully registered.",
-    message: "Now login with your registered credentials to get started!!!",
+    title: "",
+    message: "",
   });
 
   // function to close the dialog box
@@ -36,8 +38,8 @@ export default function login(props) {
     setOpen(false);
   };
 
-  // function to handle exception for invallid input data
-  const clientAction = (e) => {
+  // function to trigger while form is submitted for login
+  const clientAction = async (e) => {
     e.preventDefault();
 
     const getData = { ...authUser };
@@ -53,66 +55,34 @@ export default function login(props) {
       });
     } else {
       setAuthUser(result.data);
-      loginUser();
-    }
-  };
 
-  const LOGIN_URL = "/auth/login";
-  // Function to login user
-  const loginUser = async () => {
-    // e.preventDefault();
+      const response = await loginUser(authUser); //login the user
+      console.log("received: " + response);
 
-    let response = null;
-    try {
-      response = await axios.post(LOGIN_URL, JSON.stringify({ ...authUser }), {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-      const accessToken = JSON.stringify(response?.data?.token);
-      console.log(response?.data);
-      setAuth({ accessToken }); // Token is saved in the context
+      if (response === "SUCCESS") {
+        toast.success("LOGIN SUCCESSFUL");
+        console.log("LOGIN SUCCESSFUL"); //DEBUG POINT
 
-      console.log("LOGIN SUCCESSFUL"); //DEBUG POINT
-    } catch (err) {
-      console.log(err);
-
-      let msgBody = "";
-      let msgTitle = "";
-      if (!err?.response) {
-        console.log("response: " + response); //DEBUG POINT
-
-        msgTitle = "Internal Server Error!!!";
-        msgBody = "  Couldn't fetch the requested url :(";
-      } else if (err.response?.status === 500) {
-        console.log("response: " + err.response); // DEBUG POINT
-
-        msgTitle = "Unauthorized access or Internal Server Error!!!";
-        msgBody = "  Forbidden! The Server is refusing to respond to it :(";
-      } else if (err.response?.status === 401) {
-        console.log("response: " + response); // DEBUG POINT
-
-        msgTitle = "Unauthorized Access!!!";
-        msgBody = "  Invalid Credentials!  Bad request :(";
-      } else {
-        console.log("response: " + response); // DEBUG POINT
-
-        msgTitle = "Login Failed!!!";
-        msgBody = "  Wrong Username or Password :(";
+        // Redirect the user to the dashboard
+        router.push("/home");
+        console.log("redirected"); //DEBUG POINT
       }
-
-      setData({
-        title: msgTitle,
-        message: err.response?.status + msgBody,
+      // otherwise it will receive error messages
+      else {
+        console.log("ERROR Encountered");
+        setData({
+          title: response.title,
+          message: response.msgBody,
+        });
+        setOpen(true); // show the dialogbox
+      }
+      // reset the login form
+      setAuthUser({
+        ...authUser,
+        username: "",
+        password: "",
       });
-      setOpen(true); // show the dialogbox
     }
-
-    // reset the login form
-    setAuthUser({
-      ...authUser,
-      username: "",
-      password: "",
-    });
   };
 
   // function to change the value of state onchange in input
@@ -159,9 +129,9 @@ export default function login(props) {
             <label htmlFor="username">Email</label>
           </div>
           <div className="input-box">
-            <span className="icon ">
+            <span className="icon cursor-pointer">
               {showPassword ? (
-                <FaRegEye onClick={handlePassword} />
+                <FaRegEye onClick={handlePassword} className="" />
               ) : (
                 <FaEyeSlash onClick={handlePassword} />
               )}
