@@ -13,36 +13,57 @@ export default function Home() {
   // To show of hide the login and reg form
   const [show, setShow] = useState(true);
 
-  const changeState = (show) => {
+  const toggleForm = (show) => {
     setShow(show);
   };
 
   return (
     <>
-      <Navbar onClick={changeState} />
-      <div className="w-full h-full md:h-screen outer-div flex justify-between">
+      <Navbar onClick={toggleForm} />
+      <div className="w-full h-full md:h-screen outer-div flex justify-between ">
         {show && (
           <>
-            <Image
-              src={loginImg}
-              alt="logo"
-              height="500"
-              width="auto"
-              className=" mr-36 "
-            />
-            <Login onClick={changeState} />
+            <div className="design flex-col justify-between items-center mr-36 ">
+              <div className="heading text-center mb-10 ">
+                <p className="title text-white font-bold text-5xl mb-3">
+                  Welcome Back :)
+                </p>
+                <p className="des text-lg text-slate-400">
+                  To keep connected verify yourself with your personal info
+                </p>
+              </div>
+              <Image
+                src={loginImg}
+                alt="logo"
+                height="350"
+                width="auto"
+                className=""
+              />
+            </div>
+
+            <Login onClick={toggleForm} />
           </>
         )}
         {!show && (
           <>
-            <Register onClick={changeState} />
-            <Image
-              src={signupImg}
-              alt="logo"
-              height="380"
-              width="auto"
-              className=" ml-40 "
-            />
+            <Register onClick={toggleForm} />
+            <div className="design flex-col justify-between items-center ml-36">
+              <div className="heading text-center mb-10 ">
+                <p className="title text-white font-bold text-5xl mb-3">
+                  First Time Here!!!
+                </p>
+                <p className="des text-lg text-slate-400">
+                  Enter your details and start your journey
+                </p>
+              </div>
+              <Image
+                src={signupImg}
+                alt="logo"
+                height="280"
+                width="auto"
+                className="  "
+              />
+            </div>
           </>
         )}
       </div>
