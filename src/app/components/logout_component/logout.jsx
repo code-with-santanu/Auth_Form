@@ -9,5 +9,12 @@ export default function logout() {
     // e.preventDefault();
     await logoutAction();
   }
-  return <Button onClick={handleLogout}>LOGOUT</Button>;
+  return (
+    <Button
+      onClick={handleLogout}
+      className="text-white bg-black hover:bg-slate-900"
+    >
+      LOGOUT
+    </Button>
+  );
 }
