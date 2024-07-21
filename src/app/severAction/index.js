@@ -18,7 +18,7 @@ export async function loginUser(authUser) {
     });
 
     // Get the response
-    const accessToken = JSON.stringify(response?.data?.token);
+    const accessToken = response?.data?.token;
     console.log(response?.data);
 
     //Set the token into cookies
@@ -148,4 +148,51 @@ export async function registerUser(user) {
   }
 
   return result;
+}
+
+const USERINFO_URL = "/account/getUserInfo";
+// -----------function to fetch  userDetails------------
+export async function getUserDetails() {
+  console.log("Here We Go"); //DEBUG POINT
+
+  let response = null;
+
+  try {
+    // retrieve the token from cookies
+    const getCookies = cookies();
+    const token = getCookies.get("token")?.value || "";
+    console.log("Token get: " + token);
+
+    if (token === "") {
+      return {
+        success: false,
+        message: "Invalid Token",
+      };
+    }
+
+    response = await axios.get(USERINFO_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+
+    if (response) {
+      console.log("Here is the response");
+      console.log(response?.data);
+      return response?.data;
+    } else {
+      return {
+        success: false,
+        message: "User Details Not Found",
+      };
+    }
+  } catch (err) {
+    console.log("ERROR in FETCHING USER-DEATAILS");
+    console.log(err);
+    return {
+      success: false,
+      message: "Some error occured in fetching user-details!!! Try Again...",
+    };
+  }
 }
