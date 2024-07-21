@@ -180,7 +180,10 @@ export async function getUserDetails() {
     if (response) {
       console.log("Here is the response");
       console.log(response?.data);
-      return response?.data;
+      return {
+        success: true,
+        data: response?.data,
+      };
     } else {
       return {
         success: false,
@@ -193,6 +196,46 @@ export async function getUserDetails() {
     return {
       success: false,
       message: "Some error occured in fetching user-details!!! Try Again...",
+    };
+  }
+}
+
+const LOGOUT_URL = "/logout";
+// -----------function to fetch  userDetails------------
+export async function logoutAction() {
+  console.log("Here We Go for logout"); //DEBUG POINT
+
+  let response = null;
+
+  try {
+    // retrieve the token from cookies
+    const getCookies = cookies();
+    const token = getCookies.get("token")?.value || "";
+    console.log("Token get: " + token);
+
+    if (token === "") {
+      return {
+        success: false,
+        message: "Invalid Token",
+      };
+    }
+
+    // request to backend for logout
+    await axios.post(LOGOUT_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+
+    // Remove the token from cookies
+    getCookies.set("token", "");
+  } catch (err) {
+    console.log("ERROR in LOGOUT");
+    console.log(err);
+    return {
+      success: false,
+      message: "Some error occured in LogOut!!! Try Again...",
     };
   }
 }
