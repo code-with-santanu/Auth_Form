@@ -71,18 +71,21 @@ export async function registerUser(user) {
   let msgStatus = null;
   try {
     delete user.confirmPassword; // deleted entry before sending the data to backend
-    response = await fetch("http://localhost:8080/auth/register", {
-      method: "POST",
-      // redirect: follow, // allow redirection for authentication
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...user,
-      }),
-      credentials: "include",
-    });
+    response = await fetch(
+      "https://authenticationsystem-ttz8.onrender.com/auth/register",
+      {
+        method: "POST",
+        // redirect: follow, // allow redirection for authentication
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...user,
+        }),
+        credentials: "include",
+      }
+    );
 
     console.log(response); // DEBUG POINT
 
