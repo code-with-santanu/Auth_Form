@@ -7,14 +7,11 @@ import { toast } from "react-hot-toast";
 import { loginFormSchema } from "../../helper/requirement";
 import AuthSocialButton from "./AuthSocialButton";
 import DialogBox from "../DialogBox";
-import AuthContext from "../../context/AuthProvider";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/app/severAction";
 
 export default function login(props) {
   const router = useRouter();
-  // Global context
-  const { setAuth } = useContext(AuthContext);
 
   // To show or hide password
   const [showPassword, setShowPassword] = useState(false);
