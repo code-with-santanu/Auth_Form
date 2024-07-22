@@ -97,7 +97,7 @@ export default function signup(props) {
       <div className="signUp-box">
         <form onSubmit={clientAction}>
           <div className="heading">
-            <h1 className="text-3xl font-bold text-center text-white pt-6">
+            <h1 className="text-3xl font-bold text-center text-white pt-12">
               Create an Account!
             </h1>
           </div>
