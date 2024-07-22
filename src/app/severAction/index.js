@@ -72,7 +72,7 @@ export async function registerUser(user) {
   try {
     delete user.confirmPassword; // deleted entry before sending the data to backend
     response = await fetch(
-      "authenticationsystem-production.up.railway.app/auth/register",
+      "https://authenticationsystem.up.railway.app/auth/register",
       {
         method: "POST",
         // redirect: follow, // allow redirection for authentication

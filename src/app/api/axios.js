@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "authenticationsystem-production.up.railway.app",
+  baseURL: "https://authenticationsystem.up.railway.app",
   mode: "cors",
 });
