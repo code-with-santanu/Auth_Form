@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://authenticationsystem-ttz8.onrender.com",
+  baseURL: "authenticationsystem-production.up.railway.app",
   mode: "cors",
 });
